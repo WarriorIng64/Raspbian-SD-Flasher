@@ -24,6 +24,7 @@
 TITLE="Raspbian SD Flasher"
 URL="http://downloads.raspberrypi.org/raspbian/images/raspbian-2014-09-12/2014-09-09-wheezy-raspbian.zip"
 FILENAME="2014-09-09-wheezy-raspbian.zip"
+IMAGEFILE="2014-09-09-wheezy-raspbian.img"
 SHASUM="951a9092dd160ea06195963d1afb47220588ed84"
 
 trap "exit 1" TERM
@@ -80,7 +81,7 @@ fi
 df -h | grep '/dev/sd\|/dev/mmcblk'
 show_message "Insert your SD card, then click OK. Check the terminal for df -h output. (You may have to manually mount the SD card in your file manager to see it appear.)"
 df -h | grep '/dev/sd\|/dev/mmcblk'
-SDPARTITIONS=`zenity --entry \
+SDDEVICE=`zenity --entry \
 --title="$TITLE" \
 --text="Enter the device for your SD card (i.e. /dev/sdd or /dev/mmcblk0):"`
 case $? in
@@ -91,8 +92,22 @@ case $? in
 		setup_fail
 		;;
 esac
-umount ${SDPARTITIONS}?*
+umount ${SDDEVICE}?*
 
 # Unzip downloaded file
 cd ~/Downloads
-unzip $FILENAME
+if [ ! -e $IMAGEFILE ]
+then
+	(unzip $FILENAME) | zenity --progress --title="$TITLE" --text="Unzipping $FILENAME..." --auto-close --pulsate
+fi
+
+# Write image to SD card
+if zenity --question --title="$TITLE" --text="The image file $IMAGEFILE will now be flashed onto $SDDEVICE . This could take a while. Proceed?"
+then
+	echo "Proceeding..."
+else
+	setup_fail "Flashing cancelled."
+fi
+sudo dd bs=4M if=$IMAGEFILE of=$SDDEVICE | zenity --progress --title="$TITLE" --text="Flashing $IMAGEFILE onto $SDDEVICE..." --auto-close --pulsate
+sync
+show_message "Flashing complete! Please remove the SD card now."
