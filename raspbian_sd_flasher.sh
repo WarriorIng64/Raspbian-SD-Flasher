@@ -24,6 +24,9 @@
 TITLE="Raspbian SD Flasher"
 URL="http://downloads.raspberrypi.org/raspbian/images/raspbian-2014-09-12/2014-09-09-wheezy-raspbian.zip"
 FILENAME="2014-09-09-wheezy-raspbian.zip"
+HOMEPATH=`eval echo ~$USER`
+DOWNLOADFOLDER="$HOMEPATH/Downloads"
+FILEPATH="$DOWNLOADFOLDER/$FILENAME"
 IMAGEFILE="2014-09-09-wheezy-raspbian.img"
 SHASUM="951a9092dd160ea06195963d1afb47220588ed84"
 
@@ -44,7 +47,7 @@ setup_fail()
 	else
 		TEXT="$TITLE failed (unknown error)."
 	fi
-	TEXT="$TEXT Please re-run this wizard."
+	TEXT="$TEXT Please re-run this script."
 	zenity --error --title="$TITLE" --text="$TEXT"
 	abort_script
 }
@@ -58,10 +61,27 @@ show_message()
 # Main script
 #=============================================================================
 
+# Check for root privileges
+if [ "$(id -u)" != "0" ]; then
+	echo "You must be root to run $TITLE."
+	exit 1
+fi
+
+# Check user has zenity installed
+if ! command -v zenity >/dev/null; then
+	echo "You must install zenity to use $TITLE."
+	exit 1
+fi
+
+# Check user has mkdosfs installed
+if ! command -v mkdosfs >/dev/null; then
+	setup_fail "You need mkdosfs to use $TITLE. Try installing the dosfstools package."
+fi
+
 # Download Raspbian .zip archive
 if zenity --question --title="$TITLE" --text="Would you like to download a fresh Raspbian image?"
 then
-	cd ~/Downloads
+	cd $DOWNLOADFOLDER
 	rm -f $FILENAME
 	wget $URL 2>&1 | sed -u "s/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading $FILENAME at \2\/s, ETA \3/" | zenity --progress --title="$TITLE" --auto-close
 	sha1sum $FILENAME | grep $SHASUM
@@ -70,11 +90,13 @@ then
 		setup_fail "Download SHA1 does not match. Try again."
 	fi
 	show_message "Download complete."
-#else
-#	if [ ! -e "~/Downloads/${FILENAME}" ]
-#	then
-#		setup_fail "Cannot continue since there is no downloaded .zip archive."
-#	fi
+else
+	if [ -e "$FILEPATH" ]
+	then
+		echo "$FILEPATH confirmed to exist; continuing."
+	else
+		setup_fail "Cannot continue since there is no downloaded .zip archive."
+	fi
 fi
 
 # Get SD card info
@@ -108,7 +130,10 @@ then
 else
 	setup_fail "Flashing cancelled."
 fi
-sudo mkdosfs -F 32 -v $SDDEVICE -I | zenity --progress --title="$TITLE" --text="Formatting $SDDEVICE in FAT 32 filesystem..." --auto-close --pulsate
-sudo dd bs=4M if=$IMAGEFILE of=$SDDEVICE | zenity --progress --title="$TITLE" --text="Flashing $IMAGEFILE onto $SDDEVICE..." --auto-close --pulsate
+(sudo mkdosfs -F 32 -v $SDDEVICE -I) | zenity --progress --title="$TITLE" --text="Formatting $SDDEVICE in FAT 32 filesystem..." --auto-close --pulsate
+(sudo dd bs=4M if=$IMAGEFILE of=$SDDEVICE) | zenity --progress --title="$TITLE" --text="Flashing $IMAGEFILE onto $SDDEVICE..." --auto-close --pulsate
+echo "Running sync..."
 sync
+echo "Ejecting $SDDEVICE..."
+sudo eject $SDDEVICE
 show_message "Flashing complete! Please remove the SD card now."
