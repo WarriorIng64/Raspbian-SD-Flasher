@@ -71,7 +71,7 @@ then
 	fi
 	show_message "Download complete."
 #else
-#	if [ ! -f "~/Downloads/${FILENAME}" ];
+#	if [ ! -e "~/Downloads/${FILENAME}" ]
 #	then
 #		setup_fail "Cannot continue since there is no downloaded .zip archive."
 #	fi
@@ -108,6 +108,7 @@ then
 else
 	setup_fail "Flashing cancelled."
 fi
+sudo mkdosfs -F 32 -v $SDDEVICE -I | zenity --progress --title="$TITLE" --text="Formatting $SDDEVICE in FAT 32 filesystem..." --auto-close --pulsate
 sudo dd bs=4M if=$IMAGEFILE of=$SDDEVICE | zenity --progress --title="$TITLE" --text="Flashing $IMAGEFILE onto $SDDEVICE..." --auto-close --pulsate
 sync
 show_message "Flashing complete! Please remove the SD card now."
