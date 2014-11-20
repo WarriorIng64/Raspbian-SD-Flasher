@@ -62,10 +62,10 @@ show_message()
 #=============================================================================
 
 # Check for root privileges
-if [ "$(id -u)" != "0" ]; then
-	echo "You must be root to run $TITLE."
-	exit 1
-fi
+#if [ "$(id -u)" != "0" ]; then
+#	echo "You must be root to run $TITLE."
+#	exit 1
+#fi
 
 # Check user has zenity installed
 if ! command -v zenity >/dev/null; then
@@ -117,7 +117,7 @@ esac
 umount ${SDDEVICE}?*
 
 # Unzip downloaded file
-cd ~/Downloads
+cd $DOWNLOADFOLDER
 if [ ! -e $IMAGEFILE ]
 then
 	(unzip $FILENAME) | zenity --progress --title="$TITLE" --text="Unzipping $FILENAME..." --auto-close --pulsate
