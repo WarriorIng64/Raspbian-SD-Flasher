@@ -145,7 +145,9 @@ then
 else
 	setup_fail "Flashing cancelled."
 fi
+show_notification "You may need to enter your root password into the terminal to format the card."
 (sudo mkdosfs -F 32 -v $SDDEVICE -I) | zenity --progress --title="$TITLE" --text="Formatting $SDDEVICE in FAT 32 filesystem..." --auto-close --pulsate
+show_notification "Formatting complete; now flashing Rasbian..."
 (sudo dd bs=4M if=$IMAGEFILE of=$SDDEVICE) | zenity --progress --title="$TITLE" --text="Flashing $IMAGEFILE onto $SDDEVICE..." --auto-close --pulsate
 show_notification "Finished flashing Rasbian, now cleaning up..."
 echo "Running sync..."
