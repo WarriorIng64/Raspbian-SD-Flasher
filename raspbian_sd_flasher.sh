@@ -22,13 +22,13 @@
 #=============================================================================
 
 TITLE="Raspbian SD Flasher"
-URL="http://downloads.raspberrypi.org/raspbian/images/raspbian-2014-09-12/2014-09-09-wheezy-raspbian.zip"
+URL="http://downloads.raspberrypi.org/raspbian/images/raspbian-2014-12-25/2014-12-24-wheezy-raspbian.zip"
 FILENAME="2014-09-09-wheezy-raspbian.zip"
 HOMEPATH=`eval echo ~$USER`
 DOWNLOADFOLDER="$HOMEPATH/Downloads"
 FILEPATH="$DOWNLOADFOLDER/$FILENAME"
 IMAGEFILE="2014-09-09-wheezy-raspbian.img"
-SHASUM="951a9092dd160ea06195963d1afb47220588ed84"
+SHASUM="2371141bb0560f7e46543ed1bc939933577a9b18"
 CANNOTIFY=true
 
 trap "exit 1" TERM
