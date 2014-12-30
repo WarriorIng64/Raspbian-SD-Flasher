@@ -60,7 +60,7 @@ show_message()
 
 show_notification()
 {
-	if [ "$CANNOTIFY" = true]; then
+	if [ "$CANNOTIFY" = true ]; then
 		notify-send "$1"
 	fi
 }
