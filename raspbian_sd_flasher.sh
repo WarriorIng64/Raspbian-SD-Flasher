@@ -23,7 +23,7 @@
 
 TITLE="Raspbian SD Flasher"
 URL="http://downloads.raspberrypi.org/raspbian/images/raspbian-2014-12-25/2014-12-24-wheezy-raspbian.zip"
-FILENAME="2014-09-09-wheezy-raspbian.zip"
+FILENAME="2014-12-24-wheezy-raspbian.zip"
 HOMEPATH=`eval echo ~$USER`
 DOWNLOADFOLDER="$HOMEPATH/Downloads"
 FILEPATH="$DOWNLOADFOLDER/$FILENAME"
