@@ -29,6 +29,7 @@ DOWNLOADFOLDER="$HOMEPATH/Downloads"
 FILEPATH="$DOWNLOADFOLDER/$FILENAME"
 IMAGEFILE="2014-09-09-wheezy-raspbian.img"
 SHASUM="951a9092dd160ea06195963d1afb47220588ed84"
+CANNOTIFY=true
 
 trap "exit 1" TERM
 export TOP_PID=$$
@@ -57,6 +58,13 @@ show_message()
 	zenity --info --title="$TITLE" --text="$1"
 }
 
+show_notification()
+{
+	if [ "$CANNOTIFY" = true]; then
+		notify-send "$1"
+	fi
+}
+
 #=============================================================================
 # Main script
 #=============================================================================
@@ -78,6 +86,11 @@ if ! command -v mkdosfs >/dev/null; then
 	setup_fail "You need mkdosfs to use $TITLE. Try installing the dosfstools package."
 fi
 
+# Check if notify-send is installed
+if ! command -v notify-send >/dev/null; then
+	CANNOTIFY=false
+fi
+
 # Download Raspbian .zip archive
 if zenity --question --title="$TITLE" --text="Would you like to download a fresh Raspbian image?"
 then
@@ -89,7 +102,8 @@ then
 	then
 		setup_fail "Download SHA1 does not match. Try again."
 	fi
-	show_message "Download complete."
+	show_notification "Rasbian download complete and verified."
+	show_message "Raspbian download complete and verified."
 else
 	if [ -e "$FILEPATH" ]
 	then
@@ -121,6 +135,7 @@ cd $DOWNLOADFOLDER
 if [ ! -e $IMAGEFILE ]
 then
 	(unzip $FILENAME) | zenity --progress --title="$TITLE" --text="Unzipping $FILENAME..." --auto-close --pulsate
+	show_notification "Unzipping complete."
 fi
 
 # Write image to SD card
@@ -132,8 +147,11 @@ else
 fi
 (sudo mkdosfs -F 32 -v $SDDEVICE -I) | zenity --progress --title="$TITLE" --text="Formatting $SDDEVICE in FAT 32 filesystem..." --auto-close --pulsate
 (sudo dd bs=4M if=$IMAGEFILE of=$SDDEVICE) | zenity --progress --title="$TITLE" --text="Flashing $IMAGEFILE onto $SDDEVICE..." --auto-close --pulsate
+show_notification "Finished flashing Rasbian, now cleaning up..."
 echo "Running sync..."
 sync
 echo "Ejecting $SDDEVICE..."
+show_notification "Ejecting $SDDEVICE..."
 sudo eject $SDDEVICE
+show_notification "Rasbian SD Flasher finished!"
 show_message "Flashing complete! Please remove the SD card now."
