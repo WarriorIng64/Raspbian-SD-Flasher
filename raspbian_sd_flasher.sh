@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Raspbian SD Flasher
-# Copyright (C) 2014  Christopher Kyle Horton
+# Copyright (C) 2014-2015  Christopher Kyle Horton
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,12 +22,13 @@
 #=============================================================================
 
 TITLE="Raspbian SD Flasher"
-URL="http://downloads.raspberrypi.org/raspbian/images/raspbian-2014-12-25/2014-12-24-wheezy-raspbian.zip"
-FILENAME="2014-12-24-wheezy-raspbian.zip"
+IMAGENAME="2014-12-24-wheezy-raspbian"
+URL="http://downloads.raspberrypi.org/raspbian/images/raspbian-2014-12-25/$IMAGENAME.zip"
+FILENAME="$IMAGENAME.zip"
 HOMEPATH=`eval echo ~$USER`
 DOWNLOADFOLDER="$HOMEPATH/Downloads"
 FILEPATH="$DOWNLOADFOLDER/$FILENAME"
-IMAGEFILE="2014-09-09-wheezy-raspbian.img"
+IMAGEFILE="$IMAGENAME.img"
 SHASUM="2371141bb0560f7e46543ed1bc939933577a9b18"
 CANNOTIFY=true
 
