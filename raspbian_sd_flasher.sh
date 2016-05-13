@@ -22,14 +22,14 @@
 #=============================================================================
 
 TITLE="Raspbian SD Flasher"
-IMAGENAME="2016-03-18-raspbian-jessie"
+IMAGENAME="2016-05-10-raspbian-jessie"
 URL="http://downloads.raspberrypi.org/raspbian/images/raspbian-2016-03-18/$IMAGENAME.zip"
 FILENAME="$IMAGENAME.zip"
 HOMEPATH=`eval echo ~$USER`
 DOWNLOADFOLDER="$HOMEPATH/Downloads"
 FILEPATH="$DOWNLOADFOLDER/$FILENAME"
 IMAGEFILE="$IMAGENAME.img"
-SHASUM="db41f2a8c6236c0ca9150fe4db2017c09e7871fb"
+SHASUM="66a50545358e80229d77ebba89ab01f1c0fb4a02"
 CANNOTIFY=true
 
 trap "exit 1" TERM
