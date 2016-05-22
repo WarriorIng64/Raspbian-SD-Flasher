@@ -23,7 +23,7 @@
 
 TITLE="Raspbian SD Flasher"
 IMAGENAME="2016-05-10-raspbian-jessie"
-URL="http://downloads.raspberrypi.org/raspbian/images/raspbian-2016-03-18/$IMAGENAME.zip"
+URL="http://downloads.raspberrypi.org/raspbian/images/raspbian-2016-05-13/$IMAGENAME.zip"
 FILENAME="$IMAGENAME.zip"
 HOMEPATH=`eval echo ~$USER`
 DOWNLOADFOLDER="$HOMEPATH/Downloads"
